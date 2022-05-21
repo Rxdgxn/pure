@@ -44,7 +44,8 @@ fn endidx(src: &String) -> Option<u32> {
 
 
 fn main() {
-    let f = std::fs::read_to_string("a.pure").expect("Failed");
+    let args: Vec<String> = std::env::args().collect();
+    let f = std::fs::read_to_string(&args[1]).expect("Failed");
     let mut idx = 0;
     let mut segms: Vec<u32> = Vec::new();
     let mut file_content = String::new();
