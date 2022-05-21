@@ -1,0 +1,11 @@
+LOAD:
+UPDATE:
+DRAW:
+
+@setColor 255 0 0
+@fillRect 100 100 100 100
+@draw player.img x y 0 1 1 0 32
+
+:END
+
+This is a comment
