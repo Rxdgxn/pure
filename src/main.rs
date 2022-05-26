@@ -43,7 +43,7 @@ fn endidx(src: &String) -> Option<u32> {
 }
 
 
-fn main() {
+fn main(){
     let args: Vec<String> = std::env::args().collect();
     let f = std::fs::read_to_string(&args[1]).expect("Failed");
     let mut idx = 0;
@@ -151,5 +151,5 @@ fn main() {
         }
         idx += 1;
     }
-    println!("{file_content}");
+    std::fs::write("main.lua", file_content).expect("Failed");
 }
