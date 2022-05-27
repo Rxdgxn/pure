@@ -6,6 +6,13 @@ DRAW:
 
 @setColor 255 0 0
 @fillRect 100 100 100 100
+@img "test.jpg"
+
+if true then
+    @print "Test1" 200 200
+else
+    @print "Test2" 200 200
+end
 
 :END
 

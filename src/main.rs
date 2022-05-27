@@ -80,6 +80,7 @@ fn main(){
     }
 
     for l in f.lines() {
+        let l = l.trim();
         if idx < segms[0] {
             if l.len() > 4 {
                 if &l[0..3] == "obj" && &l[3..=3] == " " {
