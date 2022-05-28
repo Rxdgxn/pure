@@ -9,7 +9,6 @@ function love.draw()
 love.graphics.setColor(love.math.colorFromBytes(255, 0, 0, nil))
 love.graphics.rectangle('fill', 100, 100, 100, 100, nil)
 
-
 if true then
 love.graphics.print("Test1", 200, 200, nil)
 else
