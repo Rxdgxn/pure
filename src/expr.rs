@@ -1,14 +1,15 @@
+const EXTRA: [&str; 1] = ["setColor"];
 
-pub fn args(src: &str, ret: &mut String) {
-    let s = src.trim().split(' ');
-    let mut ci = 0;
-    for xs in s {
-        if ci != 0 && !xs.is_empty() {
-            ret.push_str(xs);
-            ret.push_str(", ");
+pub fn write(l: &str, fc: &mut String) {
+    if !l.is_empty() {
+        if l.chars().nth(0).unwrap() == '@' {
+            fc.push_str(&expr(&l.trim()[1..l.trim().len()]));
         }
-        ci += 1;
+        else {
+            fc.push_str(l);
+        }
     }
+    fc.push('\n');
 }
 
 pub fn expr(src: &str) -> String {
@@ -30,31 +31,30 @@ pub fn expr(src: &str) -> String {
                 }
                 else {
                     if ch == ' ' {
-                        if cw == "print".to_string() {
-                            ret.push_str("love.graphics.print(");
-                            args(src, &mut ret);
-                            ret.push_str("nil)");
+                        let cw = &cw as &str;
+                        ret.push_str(match cw {
+                            "print"    => "love.graphics.print(",
+                            "lineRect" => "love.graphics.rectangle(\'line\', ",
+                            "fillRect" => "love.graphics.rectangle(\'fill\', ",
+                            "setColor" => "love.graphics.setColor(love.math.colorFromBytes(",
+                            "draw"     => "love.graphics.draw(",
+                            _          => ""
+                        });
+                        let s = src.trim().split(' ');
+                        let mut ci = 0;
+                        for xs in s {
+                            if ci != 0 && !xs.is_empty() {
+                                ret.push_str(xs);
+                                ret.push_str(", ");
+                            }
+                            ci += 1;
                         }
-                        else if cw == "fillRect".to_string() {
-                            ret.push_str("love.graphics.rectangle(\'fill\', ");
-                            args(src, &mut ret);
-                            ret.push_str("nil)");
+                        ret.push_str("nil)");
+                        if EXTRA.contains(&cw) {
+                            ret.push_str(")");
+                            // Maybe add Hashmaps for multiple brackets?
                         }
-                        else if cw == "lineRect".to_string() {
-                            ret.push_str("love.graphics.rectangle(\'line\', ");
-                            args(src, &mut ret);
-                            ret.push_str("nil)");
-                        }
-                        else if cw == "setColor".to_string() {
-                            ret.push_str("love.graphics.setColor(love.math.colorFromBytes(");
-                            args(src, &mut ret);
-                            ret.push_str("nil))");
-                        }
-                        else if cw == "draw".to_string() {
-                            ret.push_str("love.graphics.draw(");
-                            args(src, &mut ret);
-                            ret.push_str("nil)");
-                        }
+                        break;
                     }
                 }
                 cw.push(ch);

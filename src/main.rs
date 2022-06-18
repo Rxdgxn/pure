@@ -97,15 +97,7 @@ fn main(){
                 file_content.push_str("function love.load()\n");
             }
             else if idx < segms[1] {
-                if !l.is_empty() {
-                    if l.chars().nth(0).unwrap() == '@' {
-                        file_content.push_str(&expr(&l.trim()[1..l.trim().len()]));
-                    }
-                    else {
-                        file_content.push_str(l);
-                    }
-                }
-                file_content.push('\n');
+                write(l, &mut file_content);
             }
             else {
                 if idx == segms[1] {
@@ -114,15 +106,7 @@ fn main(){
                 }
                 else {
                     if idx < segms[2] {
-                        if !l.is_empty() {
-                            if l.chars().nth(0).unwrap() == '@' {
-                                file_content.push_str(&expr(&l.trim()[1..l.trim().len()]));
-                            }
-                            else {
-                                file_content.push_str(l);
-                            }
-                        }
-                        file_content.push('\n');
+                        write(l, &mut file_content);
                     }
                     else {
                         if idx == segms[2] {
@@ -131,15 +115,7 @@ fn main(){
                         }
                         else {
                             if idx < segms[3] {
-                                if !l.is_empty() {
-                                    if l.chars().nth(0).unwrap() == '@' {
-                                        file_content.push_str(&expr(&l.trim()[1..l.trim().len()]));
-                                    }
-                                    else {
-                                        file_content.push_str(l);
-                                    }
-                                }
-                                file_content.push('\n');
+                                write(l, &mut file_content);
                             }
                             else {
                                 file_content.push_str("end");
