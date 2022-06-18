@@ -1,82 +1,44 @@
 mod expr;
 use expr::*;
 
-fn loadidx(src: &String) -> Option<u32> {
-    let mut i = 0;
+fn find_idx(src: &String, k: &str) -> Option<usize> {
+    let mut i = 0usize;
     for l in src.lines() {
-        if l.trim() == "LOAD:" {
+        if l.trim() == k {
             return Some(i);
         }
         i += 1;
     }
     None
 }
-fn updateidx(src: &String) -> Option<u32> {
-    let mut i = 0;
-    for l in src.lines() {
-        if l.trim() == "UPDATE:" {
-            return Some(i);
+fn find_dot(src: &String) -> usize {
+    let mut i = 0usize;
+    let mut idx = 0usize;
+    for ch in src.chars() {
+        if ch == '.' {
+            idx = i;
         }
         i += 1;
     }
-    None
-}
-fn drawidx(src: &String) -> Option<u32> {
-    let mut i = 0;
-    for l in src.lines() {
-        if l.trim() == "DRAW:" {
-            return Some(i);
-        }
-        i += 1;
-    }
-    None
-}
-fn endidx(src: &String) -> Option<u32> {
-    let mut i = 0;
-    for l in src.lines() {
-        if l.trim() == ":END" {
-            return Some(i);
-        }
-        i += 1;
-    }
-    None
+    idx
 }
 
 
-fn main(){
+fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let f = std::fs::read_to_string(&args[1]).expect("Failed");
+    let file_name = &args[1];
+    let f = std::fs::read_to_string(file_name).expect("Failed");
     let mut idx = 0;
-    let mut segms: Vec<u32> = Vec::new();
+    let mut segms: Vec<usize> = Vec::new();
     let mut file_content = String::new();
 
-    if let Some(l) = loadidx(&f) {
-        segms.push(l);
-    }
-    else {
-        println!("Expected 'LOAD:' segment");
-        std::process::exit(1);
-    }
-    if let Some(u) = updateidx(&f) {
-        segms.push(u);
-    }
-    else {
-        println!("Expected 'UPDATE:' segment");
-        std::process::exit(1);
-    }
-    if let Some(d) = drawidx(&f) {
-        segms.push(d);
-    }
-    else {
-        println!("Expected 'DRAW:' segment");
-        std::process::exit(1);
-    }
-    if let Some(e) = endidx(&f) {
-        segms.push(e);
-    }
-    else {
-        println!("Expected ':END' segment");
-        std::process::exit(1);
+    for segm in ["LOAD:", "UPDATE:", "DRAW:", ":END"] {
+        if let Some(x) = find_idx(&f, segm) {
+            segms.push(x);
+        }
+        else {
+            panic!("Expected '{}' segment", segm);
+        }
     }
 
     for l in f.lines() {
@@ -128,5 +90,7 @@ fn main(){
         }
         idx += 1;
     }
-    std::fs::write("main.lua", file_content).expect("Failed");
+    let mut path = String::from(&(&file_name as &str)[0..find_dot(&file_name)]);
+    path.push_str(".lua");
+    std::fs::write(path, file_content).expect("Failed");
 }
